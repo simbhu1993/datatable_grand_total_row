@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css" />
+    <title>Hello, world!</title>
+  </head>
+  <body>
+    <table id="example" class="display" style="width:100%">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Position</th>
+                <th>Office</th>
+                <th>Extn.</th>
+                <th>Start date</th>
+                <th>Salary</th>
+            </tr>
+			<tr class="grand-total-header">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td class="grand-extn" style="padding: 8px 10px;"></td>
+                <td></td>
+                <td class="grand-price" style="padding: 8px 10px;"></td>
+            </tr>
+        </thead>
+        <tfoot>
+            <tr>
+                <th>Name</th>
+                <th>Position</th>
+                <th>Office</th>
+                <th>Extn.</th>
+                <th>Start date</th>
+                <th>Salary</th>
+            </tr>
+        </tfoot>
+    </table>
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js" ></script>
+<script src="https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap4.min.js"></script>
+<script>
+$(document).ready(function() {
+	$('#example').DataTable({
+		"orderCellsTop": true,
+        "ajax": 'data_source.txt',
+		"drawCallback": function (settings ) {
+			var data_row=$("#example tbody tr");
+			if(data_row.length>0){
+				var grand_extn=0;
+				var grand_price=0;
+				data_row.each(function(){
+					$(this).find('td:nth-child(4)').each(function(){
+						grand_extn+=parseInt($(this).text());
+					});
+					$(this).find('td:nth-child(6)').each(function(){
+					var currency=($(this).text());
+						grand_price+=Number(currency.replace(/[^0-9.-]+/g,""));
+					});
+				});
+				$("td.grand-extn").html(grand_extn.toLocaleString());
+				$("td.grand-price").html("$"+grand_price.toLocaleString('en-US', {currency:'USD'}));
+			}
+		}
+    });
+});
+</script>
+  </body>
+</html>
